@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 
 import { ButtonElement } from './ButtonElement';
 import { ButtonLeaf } from './ButtonLeaf';
 import { setObjectState } from './helpers/setObjectState';
 import { FormatType } from './text-editor-const';
+import { LinkInsertion } from "./LinkInsertion";
 
 const elementTools = [
   {
@@ -54,6 +55,11 @@ const leafTools = [
     format: FormatType.JustifyAlignment,
     icon: 'MdFormatAlignJustify',
   },
+  {
+    format: FormatType.Link,
+    icon: 'MdInsertLink',
+    iconToggleOff: 'MdLinkOff',
+  },
   // {
   //   format: FormatType.HeadingOne,
   //   icon: 'MdCode',
@@ -91,6 +97,14 @@ const Toolbar = () => {
     }
   }, [iconStates]);
 
+  const [selectedText, setSelectedText] = useState({});
+  const [modalInsertURL, setModalInsertURL] = useState(false);
+  const handleSelectedText = useCallback((text) => {
+    setModalInsertURL(true);
+    setSelectedText(text);
+  }, [setModalInsertURL, setSelectedText]);
+  const handleModal = useCallback((modal) => setModalInsertURL(modal), [setModalInsertURL]);
+
   return (
     <div className="flex h-[46px] w-full items-center border-b border-slate-300 text-center">
       {spinner[icons] && (
@@ -111,9 +125,12 @@ const Toolbar = () => {
           key={`buttonLeaf${index}`}
           format={toolbar.format}
           icon={toolbar.icon}
+          iconToggleOff={toolbar.iconToggleOff}
           isIconShown={handleIsIconShown}
+          onSelectedText={handleSelectedText}
         />
       ))}
+      <LinkInsertion modal={modalInsertURL} textToLink={selectedText} setModal={handleModal} />
     </div>
   );
 };

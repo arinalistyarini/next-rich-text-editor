@@ -1,6 +1,6 @@
 // https://github.com/ianstormtaylor/slate/blob/main/site/examples/richtext.tsx
 // https://www.slatejs.org/examples/richtext
-
+// https://www.smashingmagazine.com/2021/05/building-wysiwyg-editor-javascript-slatejs
 import { useMemo } from 'react';
 import type { Descendant } from 'slate';
 import { createEditor } from 'slate';
@@ -8,11 +8,14 @@ import { withHistory } from 'slate-history';
 import { Slate, withReact } from 'slate-react';
 
 import { EditArea } from './EditArea';
+import { withInlines } from './helpers/withInlines';
 import { Toolbar } from './Toolbar';
 
 const TextEditor = () => {
-  // Create a Slate editor object that won't change across renders.
-  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
+  const editor = useMemo(
+    () => withInlines(withHistory(withReact(createEditor()))),
+    []
+  );
 
   const initialValue: Descendant[] = [
     // {
@@ -87,7 +90,17 @@ const TextEditor = () => {
     {
       type: 'paragraph',
       align: 'center',
-      children: [{ text: 'Try it out for yourself!' }],
+      children: [
+        { text: 'Try it out for yourself!' },
+        {
+          type: 'link',
+          url: 'https://www.google.com',
+          children: [
+            { text: 'Link text' },
+            { text: 'Bold text inside link', bold: true },
+          ],
+        },
+      ],
     },
   ];
 

@@ -1,5 +1,3 @@
-export const a = 'a';
-
 export enum FormatType {
   Blockquote = 'block-quote',
   BulletedList = 'bulleted-list',
@@ -17,4 +15,14 @@ export enum FormatType {
   Code = 'code',
   Italic = 'italic',
   Underline = 'underline',
+  Link = 'link',
+  Image = 'image',
 }
+
+export const LIST_TYPES = [FormatType.NumberedList, FormatType.BulletedList];
+export const TEXT_ALIGN_TYPES = [
+  FormatType.LeftAlignment,
+  FormatType.CenterAlignment,
+  FormatType.RightAlignment,
+  FormatType.JustifyAlignment,
+];

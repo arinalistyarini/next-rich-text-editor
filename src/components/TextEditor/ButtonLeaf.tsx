@@ -2,69 +2,59 @@ import { useEffect } from 'react';
 import { Editor, Element as SlateElement, Transforms } from 'slate';
 import { useSlate } from 'slate-react';
 
+import { isBlockActive } from './helpers/isBlockActive';
+import { unwrapLink } from './helpers/withInlines';
 import { useButtonClassNames } from './hooks/useButtonClassNames';
 import { useGetIcon } from './hooks/useGetIcon';
-import { FormatType } from './text-editor-const';
+import { FormatType, LIST_TYPES, TEXT_ALIGN_TYPES } from './text-editor-const';
 
-const ButtonLeaf = ({ icon, format, isIconShown }) => {
+const ButtonLeaf = ({ icon, iconToggleOff, format, isIconShown, onSelectedText }) => {
   const slateEditor = useSlate();
 
   const IconComponent = useGetIcon(icon);
   useEffect(() => {
     isIconShown(format, !!IconComponent);
   }, [IconComponent]);
+  const IconToggleOffComponent = iconToggleOff ? useGetIcon(iconToggleOff) : null;
 
-  const isActive = getIsBlockActive(slateEditor, format);
+  const isActive = isBlockActive(slateEditor, format);
 
   const buttonOnClick = (event) => {
     event.preventDefault();
-    toggleBlock(slateEditor, format);
+    if (format === FormatType.Link) {
+      buttonLinkOnClick(slateEditor);
+    } else {
+      toggleBlock(slateEditor, format);
+    }
+  };
+
+  const buttonLinkOnClick = (editor) => {
+    if (isActive) {
+      unwrapLink(editor);
+    } else {
+      // https://github.com/ianstormtaylor/slate/issues/551
+      const selectedText = editor.selection ? Editor.string(editor, editor.selection) : '';
+      onSelectedText(selectedText);
+    }
   };
 
   const buttonClasses = useButtonClassNames(isActive, !!IconComponent);
 
+  const ButtonComponent = () => {
+    if (!!iconToggleOff && isActive) return IconToggleOffComponent;
+
+    return IconComponent;
+  };
+
   return (
     <button className={buttonClasses} onMouseDown={buttonOnClick}>
-      {IconComponent}
+      { ButtonComponent() }
     </button>
   );
 };
 
-const getIsBlockActive = (editor, format) => {
-  return isBlockActive(
-    editor,
-    format,
-    TEXT_ALIGN_TYPES.includes(format) ? 'align' : 'type'
-  );
-};
-
-const LIST_TYPES = [FormatType.NumberedList, FormatType.BulletedList];
-const TEXT_ALIGN_TYPES = [
-  FormatType.LeftAlignment,
-  FormatType.CenterAlignment,
-  FormatType.RightAlignment,
-  FormatType.JustifyAlignment,
-];
-
-const isBlockActive = (editor, format, blockType = 'type') => {
-  const { selection } = editor;
-  if (!selection) return false;
-
-  const [match] = Array.from(
-    Editor.nodes(editor, {
-      at: Editor.unhangRange(editor, selection),
-      match: (n) =>
-        !Editor.isEditor(n) &&
-        SlateElement.isElement(n) &&
-        n[blockType] === format,
-    })
-  );
-
-  return !!match;
-};
-
 const toggleBlock = (editor, format) => {
-  const isActive = getIsBlockActive(editor, format);
+  const isActive = isBlockActive(editor, format);
   const isList = LIST_TYPES.includes(format);
 
   Transforms.unwrapNodes(editor, {

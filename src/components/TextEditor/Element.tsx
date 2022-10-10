@@ -8,7 +8,11 @@ const Element = (props) => {
   switch (element.type) {
     case FormatType.Blockquote:
       return (
-        <blockquote className={'text-base'} style={style} {...attributes}>
+        <blockquote
+          className={'border-l-4 border-slate-300 pl-4 text-base'}
+          style={style}
+          {...attributes}
+        >
           {children}
         </blockquote>
       );
@@ -56,9 +60,28 @@ const Element = (props) => {
           {children}
         </p>
       );
+    case FormatType.Link:
+      return (
+        <a href={element.url} {...attributes}>
+          <InlineChromiumBugfix />
+            {children}
+          <InlineChromiumBugfix />
+        </a>
+      );
     default:
       return <DefaultElement {...props} />;
   }
 };
+
+// Put this at the start and end of an inline component to work around this Chromium bug:
+// https://bugs.chromium.org/p/chromium/issues/detail?id=1249405
+const InlineChromiumBugfix = () => (
+  <span
+    contentEditable={false}
+    className="text-[0px]"
+  >
+    ${String.fromCodePoint(160) /* Non-breaking space */}
+  </span>
+)
 
 export { Element };

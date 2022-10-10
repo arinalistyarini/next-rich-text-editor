@@ -17,7 +17,14 @@ const Leaf = ({ attributes, children, leaf }) => {
     children = <u>{children}</u>;
   }
 
-  return <span {...attributes}>{children}</span>;
+  // The following is a workaround for a Chromium bug where,
+  // if you have an inline at the end of a block,
+  // clicking the end of a block puts the cursor inside the inline
+  // instead of inside the final {text: ''} node
+  // https://github.com/ianstormtaylor/slate/issues/4704#issuecomment-1006696364
+  const leafClasses = leaf.text === '' ? 'pl-[0.1px]' : '';
+
+  return <span className={leafClasses} {...attributes}>{children}</span>;
 };
 
 export { Leaf };
