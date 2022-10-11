@@ -1,5 +1,6 @@
 import { DefaultElement } from 'slate-react';
 
+import { Image } from './Image';
 import { FormatType } from './text-editor-const';
 
 const Element = (props) => {
@@ -73,6 +74,10 @@ const Element = (props) => {
             {children}
           <InlineChromiumBugfix />
         </a>
+      );
+    case FormatType.Image:
+      return (
+        <Image {...props} />
       );
     default:
       return <DefaultElement {...props} />;

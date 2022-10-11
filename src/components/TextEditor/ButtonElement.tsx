@@ -1,8 +1,10 @@
 import { useEffect } from 'react';
 import { Editor, Element as SlateElement, Transforms } from 'slate';
 import { useSlate } from 'slate-react';
+import { insertImage } from './helpers/insertImage';
 
 import { isBlockActive } from './helpers/isBlockActive';
+import { removeImage } from './helpers/removeImage';
 import { unwrapLink } from './helpers/withInlines';
 import { useButtonClassNames } from './hooks/useButtonClassNames';
 import { useGetIcon } from './hooks/useGetIcon';
@@ -22,20 +24,50 @@ const ButtonElement = ({ icon, iconToggleOff, format, isIconShown, onSelectedTex
   const buttonOnClick = (event) => {
     event.preventDefault();
     if (format === FormatType.Link) {
-      buttonLinkOnClick(slateEditor);
+      buttonLinkOnClick();
+    } else if (format === FormatType.Image) {
+      buttonImageOnClick();
     } else {
       toggleBlock(slateEditor, format);
     }
   };
 
-  const buttonLinkOnClick = (editor) => {
+  const buttonLinkOnClick = () => {
     if (isActive) {
-      unwrapLink(editor);
+      unwrapLink(slateEditor);
     } else {
       // https://github.com/ianstormtaylor/slate/issues/551
-      const selectedText = editor.selection ? Editor.string(editor, editor.selection) : '';
+      const selectedText = slateEditor.selection ? Editor.string(slateEditor, slateEditor.selection) : '';
       onSelectedText(selectedText);
     }
+  };
+
+  const fileInput = 'file-input';
+  const buttonImageOnClick = () => {
+    if (!isActive) {
+      const fileInputEl = document.querySelector(`#${fileInput}`);
+      if (fileInputEl) fileInputEl.click();
+    } else {
+      const { anchor } = slateEditor.selection;
+      const { path } = anchor || [];
+      removeImage(slateEditor, [path[0]]);
+    }
+  };
+
+  const handleImage = (event) => {
+    for (const file of event.target.files) {
+      const reader = new FileReader();
+      const [mime] = file.type.split('/');
+      if (mime === 'image') {
+        reader.onload = (e) => {
+          const src = e.target.result;
+          insertImage(slateEditor, src);
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    event.target.value = null;
   };
 
   const buttonClasses = useButtonClassNames(isActive, !!IconComponent);
@@ -48,7 +80,14 @@ const ButtonElement = ({ icon, iconToggleOff, format, isIconShown, onSelectedTex
 
   return (
     <button className={buttonClasses} onMouseDown={buttonOnClick}>
-      { ButtonComponent() }
+      { format !== FormatType.Image
+        ? ButtonComponent()
+        :
+          <span className="hover:cursor-pointer">
+            <label className="hover:cursor-pointer">{ ButtonComponent() }</label>
+            <input id={fileInput} className="hidden" accept="image/*" type="file" onChange={handleImage} />
+          </span>
+      }
     </button>
   );
 };

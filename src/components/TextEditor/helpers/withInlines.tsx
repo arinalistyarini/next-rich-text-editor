@@ -5,10 +5,14 @@ import { FormatType } from '../text-editor-const';
 import { isLinkActive } from './isLinkActive';
 
 const withInlines = (editor) => {
-  const { insertData, insertText, isInline } = editor;
+  const { insertData, insertText, isInline, isVoid } = editor;
 
   editor.isInline = (element) =>
     [FormatType.Link].includes(element.type) || isInline(element);
+
+  editor.isVoid = (element) => {
+    return element.type === FormatType.Image || isVoid(element);
+  }
 
   editor.insertText = (text) => {
     if (text && isUrl(text)) {

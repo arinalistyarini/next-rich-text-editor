@@ -72,6 +72,11 @@ const elementTools = [
     icon: 'MdInsertLink',
     iconToggleOff: 'MdLinkOff',
   },
+  {
+    format: FormatType.Image,
+    icon: 'MdOutlineImage',
+    iconToggleOff: 'MdOutlineHideImage',
+  },
 ];
 
 const Toolbar = () => {
@@ -101,6 +106,7 @@ const Toolbar = () => {
     }
   }, [iconStates]);
 
+  // insert new link
   const [selectedText, setSelectedText] = useState({});
   const [modalInsertURL, setModalInsertURL] = useState(false);
   const handleSelectedText = useCallback((text) => {
