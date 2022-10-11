@@ -1,6 +1,6 @@
 export const AppConfig = {
-  site_name: 'Starter',
-  title: 'Nextjs Starter',
-  description: 'Starter code for your Nextjs Boilerplate with Tailwind CSS',
+  site_name: 'RTE',
+  title: 'Rich Text Editor',
+  description: 'Rich text editor demo using NextJS & SlateJS',
   locale: 'en',
 };

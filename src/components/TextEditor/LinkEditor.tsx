@@ -49,7 +49,11 @@ const LinkEditor = ({ editor, editorOffsets }) => {
   );
 
   const closePopup = () => {
-    Transforms.select(editor, {path: [0, 0], offset: 0});
+    // https://github.com/ianstormtaylor/slate/issues/3858
+    Transforms.select(editor, {
+      anchor: { path: [0, 0], offset: 0 },
+      focus: { path: [0, 0], offset: 0 },
+    });
   };
 
   const onApply = useCallback(

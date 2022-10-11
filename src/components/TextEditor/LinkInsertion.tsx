@@ -37,7 +37,7 @@ const LinkInsertion = ({ modal, textToLink, setModal }) => {
     () => {
       const isCursorInEditor = !!editor.selection;
       if (!isCursorInEditor) Transforms.select(editor, {path: [0, 0], offset: 0});
-      wrapLink(editor, linkURL);
+      wrapLink(editor, linkURL, selectedText);
 
       handleCloseModal();
     },

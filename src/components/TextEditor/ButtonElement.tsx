@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Editor, Element as SlateElement, Transforms } from 'slate';
 import { useSlate } from 'slate-react';
-import { insertImage } from './helpers/insertImage';
+import { insertImages } from './helpers/insertImages';
 
 import { isBlockActive } from './helpers/isBlockActive';
 import { removeImage } from './helpers/removeImage';
@@ -55,18 +55,7 @@ const ButtonElement = ({ icon, iconToggleOff, format, isIconShown, onSelectedTex
   };
 
   const handleImage = (event) => {
-    for (const file of event.target.files) {
-      const reader = new FileReader();
-      const [mime] = file.type.split('/');
-      if (mime === 'image') {
-        reader.onload = (e) => {
-          const src = e.target.result;
-          insertImage(slateEditor, src);
-        }
-        reader.readAsDataURL(file);
-      }
-    }
-
+    insertImages(slateEditor, event.target.files);
     event.target.value = null;
   };
 

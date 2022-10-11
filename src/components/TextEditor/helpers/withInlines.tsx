@@ -2,6 +2,7 @@ import isUrl from 'is-url';
 import { Editor, Element as SlateElement, Range, Transforms } from 'slate';
 
 import { FormatType } from '../text-editor-const';
+import { insertImages } from './insertImages';
 import { isLinkActive } from './isLinkActive';
 
 const withInlines = (editor) => {
@@ -28,7 +29,13 @@ const withInlines = (editor) => {
     if (text && isUrl(text)) {
       wrapLink(editor, text);
     } else {
-      insertData(data);
+      const { files } = data;
+
+      if (files && files.length > 0) {
+        insertImages(editor, files);
+      } else {
+        insertData(data);
+      }
     }
   };
 
@@ -42,7 +49,7 @@ const unwrapLink = (editor) => {
   });
 };
 
-const wrapLink = (editor, url: String) => {
+const wrapLink = (editor, url: String, label: String = '') => {
   if (isLinkActive(editor)) {
     unwrapLink(editor);
   }
@@ -52,7 +59,7 @@ const wrapLink = (editor, url: String) => {
   const link = {
     type: FormatType.Link,
     url,
-    children: isCollapsed ? [{ text: url }] : [],
+    children: isCollapsed ? [{ text: label || url }] : [],
   };
 
   if (isCollapsed) {

@@ -46,7 +46,7 @@ const EditArea = () => {
         }
       />
       <Editable
-        className="p-3 h-[375px] overflow-auto"
+        className="p-3 h-[375px] overflow-y-auto overflow-x-hidden"
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         spellCheck

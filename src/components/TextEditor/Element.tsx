@@ -89,7 +89,7 @@ const Element = (props) => {
 const InlineChromiumBugfix = () => (
   <span
     contentEditable={false}
-    className="text-[0px]"
+    className="text-[0px] !width-auto"
   >
     ${String.fromCodePoint(160) /* Non-breaking space */}
   </span>
