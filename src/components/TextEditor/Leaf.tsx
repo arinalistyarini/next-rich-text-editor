@@ -6,7 +6,7 @@ const Leaf = ({ attributes, children, leaf }) => {
   }
 
   if (leaf[FormatType.Code]) {
-    children = <code className="rounded bg-slate-100 p-1">{children}</code>;
+    children = <code className="rounded bg-slate-100 p-1 text-rose-700">{children}</code>;
   }
 
   if (leaf[FormatType.Italic]) {

@@ -4,6 +4,7 @@ export enum FormatType {
   NumberedList = 'numbered-list',
   HeadingOne = 'heading-one',
   HeadingTwo = 'heading-two',
+  HeadingThree = 'heading-three',
   Blockcode = 'block-code',
   LeftAlignment = 'left',
   RightAlignment = 'right',

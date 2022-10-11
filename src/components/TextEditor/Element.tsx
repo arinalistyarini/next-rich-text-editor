@@ -28,15 +28,21 @@ const Element = (props) => {
       );
     case FormatType.HeadingOne:
       return (
-        <h1 className={'text-2xl font-bold'} style={style} {...attributes}>
+        <h1 className={'text-4xl font-bold mb-3'} style={style} {...attributes}>
           {children}
         </h1>
       );
     case FormatType.HeadingTwo:
       return (
-        <h2 className={'text-xl font-bold'} style={style} {...attributes}>
+        <h2 className={'text-2xl font-bold mb-3'} style={style} {...attributes}>
           {children}
         </h2>
+      );
+    case FormatType.HeadingThree:
+      return (
+        <h3 className={'text-lg font-bold mb-3'} style={style} {...attributes}>
+          {children}
+        </h3>
       );
     case FormatType.ListItem:
       return (

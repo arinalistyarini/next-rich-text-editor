@@ -7,7 +7,7 @@ import { setObjectState } from './helpers/setObjectState';
 import { FormatType } from './text-editor-const';
 import { LinkInsertion } from "./LinkInsertion";
 
-const elementTools = [
+const leafTools = [
   {
     format: FormatType.Bold,
     icon: 'MdFormatBold',
@@ -26,7 +26,19 @@ const elementTools = [
   },
 ];
 
-const leafTools = [
+const elementTools = [
+  {
+    format: FormatType.HeadingOne,
+    icon: 'MdLooksOne',
+  },
+  {
+    format: FormatType.HeadingTwo,
+    icon: 'MdLooksTwo',
+  },
+  {
+    format: FormatType.HeadingThree,
+    icon: 'MdLooks3',
+  },
   {
     format: FormatType.Blockquote,
     icon: 'MdFormatQuote',
@@ -60,14 +72,6 @@ const leafTools = [
     icon: 'MdInsertLink',
     iconToggleOff: 'MdLinkOff',
   },
-  // {
-  //   format: FormatType.HeadingOne,
-  //   icon: 'MdCode',
-  // },
-  // {
-  //   format: FormatType.HeadingTwo,
-  //   icon: 'MdCode',
-  // },
 ];
 
 const Toolbar = () => {
@@ -112,17 +116,17 @@ const Toolbar = () => {
           <ImSpinner2 className="animate-spin text-gray-400" />
         </div>
       )}
-      {elementTools.map((toolbar, index) => (
-        <ButtonElement
-          key={`buttonElement${index}`}
+      {leafTools.map((toolbar, index) => (
+        <ButtonLeaf
+          key={`buttonLeaf${index}`}
           format={toolbar.format}
           icon={toolbar.icon}
           isIconShown={handleIsIconShown}
         />
       ))}
-      {leafTools.map((toolbar, index) => (
-        <ButtonLeaf
-          key={`buttonLeaf${index}`}
+      {elementTools.map((toolbar, index) => (
+        <ButtonElement
+          key={`buttonElement${index}`}
           format={toolbar.format}
           icon={toolbar.icon}
           iconToggleOff={toolbar.iconToggleOff}
